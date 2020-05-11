@@ -8,8 +8,8 @@ Yet another abook replacement.. kinda
 
 Description
 ===========
-
-A longer description of your project goes here...
+This app was written so I could tag addresses and then search on those tags.
+It is a console app and I made it to work with neomutt
 
 
 Note

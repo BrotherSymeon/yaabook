@@ -38,6 +38,13 @@ def setup_logging():
     logfile = join(app_path, 'yaabook.log')
     logging.basicConfig(filename=logfile, filemode='a', format='%(asctime)s %(levelname)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.DEBUG)
 
+def add_email_to_db(data):
+    """ data should be a two tuple """
+    global APP_NAME
+    config = AppConfig(APP_NAME)
+    db = AddressDB(config.get('default', 'dbfile'))
+    db.add_record(name=data[0], email=data[1])
+
 def output_matching_contacts(search_string=''):
     #pdb.set_trace()
     global APP_NAME
@@ -67,11 +74,18 @@ def extract_name_and_email(text):
     try:
         from_matcher = re.compile('From:(.*)')
         email_matcher = re.compile('([^<]+)\s<(.*)>')
-        logging.debug('matching data attempt')
+        logging.debug(f'matching data attempt matching {text}')
         from_data = from_matcher.match(text)
         if from_data:
-            data = from_data.goup()
-            logging.debug(f"matched {data}")
+            logging.debug("from_data true")
+            data = from_data.group()
+            logging.debug(f'data = {data}')
+            email_match = email_matcher.match(data)
+            name = email_match.group(1).replace('"', '').replace('From: ', '')
+            email = email_match.group(2).replace('<', '').replace('>', '')
+
+            logging.debug(f"matched email = {email} name = {name}")
+            return (name, email)
         else:
             logging.debug('there was no match')
 
@@ -83,10 +97,12 @@ def get_stdin():
         logging.debug('stdin has data')
         added = ''
         for line in fileinput.input():
-            added += line
+            if line.strip().startswith('From:'):
+                added = line
+                break
 
-        #logging.debug( 'added item= ' + added )
-        extract_name_and_email(added)
+        logging.debug( 'added item= ' + added )
+        add_email_to_db( extract_name_and_email( added ) )
         sys.exit()
     else:
         logging.debug('stdin has no data')

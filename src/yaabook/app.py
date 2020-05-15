@@ -14,23 +14,19 @@ import sys
 import select
 import configparser
 import re
-from os.path import join, isdir,isfile, expanduser
-
+from os.path import join, isdir, isfile, expanduser
 from os import mkdir
-
-
 
 app_db_file_path = ''
 APP_NAME = 'yaabook'
+
 
 def init_config():
     """ this sets the default values that we want for the app """
     global APP_NAME
     app_path = str(Path(__file__).parent.absolute())
     app_db_file = 'yaabook.json'
-    config = AppConfig(APP_NAME, {'default':
-        {'dbfile': join(app_path, app_db_file) }
-    })
+    config = AppConfig(APP_NAME, {'default':{'dbfile': join(app_path, app_db_file)}})
 
 
 def setup_logging():
@@ -38,12 +34,14 @@ def setup_logging():
     logfile = join(app_path, 'yaabook.log')
     logging.basicConfig(filename=logfile, filemode='a', format='%(asctime)s %(levelname)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.DEBUG)
 
+
 def add_email_to_db(data):
     """ data should be a two tuple """
     global APP_NAME
     config = AppConfig(APP_NAME)
     db = AddressDB(config.get('default', 'dbfile'))
     db.add_record(name=data[0], email=data[1])
+
 
 def output_matching_contacts(search_string=''):
     #pdb.set_trace()
@@ -56,6 +54,7 @@ def output_matching_contacts(search_string=''):
         sys.stdout.write('\n' + item['email'] + '\t' + item['name'])
         #print( item['email'] + '\t' + item['name'] )
 
+
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--query", help="Use this flag for query_command")
@@ -67,6 +66,7 @@ def get_args():
         return False
     else:
         return True
+
 
 def extract_name_and_email(text):
     # email regex - '([^<]+)\s<(.*)>'
@@ -92,6 +92,7 @@ def extract_name_and_email(text):
     except AttributeError as error:
         logging.debug("attribute Error: {}".format(error))
 
+
 def get_stdin():
     if select.select([sys.stdin,],[],[],0.0)[0]:
         logging.debug('stdin has data')
@@ -107,6 +108,7 @@ def get_stdin():
     else:
         logging.debug('stdin has no data')
 
+
 def run():
     init_config()
     setup_logging()
@@ -115,9 +117,11 @@ def run():
     if get_args():
         show_ui()
 
+
 def show_ui():
     myApp = AddressBookApplication()
     myApp.run()
+
 
 if __name__ == "__main__":
   run()

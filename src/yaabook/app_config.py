@@ -14,7 +14,7 @@ class AppConfig():
         self.config = configparser.ConfigParser()
         config_name = "config.ini"
         config_file = Path(join( self.appPath, config_name ) )
-        if config_file.is_file():
+        if isfile(join(self.appPath, config_name)):
             #read from it
             self.config.read(str( config_file ))
         else:

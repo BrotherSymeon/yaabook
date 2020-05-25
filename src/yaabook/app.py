@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-from .addressDb import AddressDB
-from .address_book_app import AddressBookApplication
-from .app_config import AppConfig
+from yaabook.addressDb import AddressDB
+from yaabook.address_book_app import AddressBookApplication
+from yaabook.app_config import AppConfig
 
 
 from pathlib import Path

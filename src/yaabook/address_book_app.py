@@ -4,10 +4,10 @@ import logging
 import npyscreen
 
 
-from .record_list_display import RecordListDisplay
-from .edit_record import EditRecord
-from .addressDb import AddressDB
-from .app_config import AppConfig
+from yaabook.record_list_display import RecordListDisplay
+from yaabook.edit_record import EditRecord
+from yaabook.addressDb import AddressDB
+from yaabook.app_config import AppConfig
 
 
 class AddressBookApplication(npyscreen.NPSAppManaged):
